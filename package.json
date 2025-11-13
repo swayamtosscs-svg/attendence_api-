@@ -6,6 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
+    "start:8087": "next start -p 8087 -H 0.0.0.0",
+    "dev:8087": "next dev -p 8087 -H 0.0.0.0",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
   },
