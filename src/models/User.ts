@@ -12,6 +12,7 @@ export interface UserDocument {
   designation?: string;
   status: "active" | "inactive";
   manager?: Schema.Types.ObjectId;
+  profilePicture?: string;
   lastLoginAt?: Date;
   createdAt: Date;
   updatedAt: Date;
@@ -57,6 +58,10 @@ const userSchema = new Schema<UserDocument>(
     manager: {
       type: Schema.Types.ObjectId,
       ref: "User"
+    },
+    profilePicture: {
+      type: String,
+      trim: true
     },
     lastLoginAt: Date
   },

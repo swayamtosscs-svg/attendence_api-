@@ -3,11 +3,9 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -H 0.0.0.0 -p 8087",
     "build": "next build",
     "start": "next start",
-    "start:8087": "next start -p 8087 -H 0.0.0.0",
-    "dev:8087": "next dev -p 8087 -H 0.0.0.0",
     "lint": "next lint",
     "type-check": "tsc --noEmit"
   },
@@ -19,6 +17,7 @@
     "next-auth": "^4.24.6",
     "react": "18.3.1",
     "react-dom": "18.3.1",
+    "socket.io": "^4.7.2",
     "zod": "^3.22.4"
   },
   "devDependencies": {
@@ -27,6 +26,7 @@
     "@types/node": "^20.11.30",
     "@types/react": "^18.2.37",
     "@types/react-dom": "^18.2.15",
+    "@types/socket.io": "^3.0.2",
     "eslint": "^8.56.0",
     "eslint-config-next": "^14.2.4",
     "typescript": "^5.4.5"

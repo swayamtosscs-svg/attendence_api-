@@ -2,9 +2,7 @@ import { NextRequest } from "next/server";
 import mongoose from "mongoose";
 import { connectDB } from "@/lib/db";
 import AttendanceModel from "@/models/Attendance";
-import type { AttendanceDocument } from "@/models/Attendance";
 import UserModel from "@/models/User";
-import type { UserDocument } from "@/models/User";
 import { getSessionUser } from "@/lib/current-user";
 import { handleApiError } from "@/lib/api-response";
 import { errorResponse, jsonResponse } from "@/lib/http";
@@ -37,7 +35,7 @@ async function ensurePermission(
     }
     const targetUser = await UserModel.findById(targetUserId)
       .select("manager")
-      .lean<Pick<UserDocument, "manager">>();
+      .lean();
     return targetUser?.manager?.toString() === sessionUserId;
   }
 
@@ -59,27 +57,7 @@ export async function GET(
     await connectDB();
     const attendance = await AttendanceModel.findById(attendanceId)
       .populate("user", "name email role manager")
-      .lean<
-        Pick<
-          AttendanceDocument,
-          | "date"
-          | "checkInAt"
-          | "checkOutAt"
-          | "workDurationMinutes"
-          | "status"
-          | "notes"
-          | "lateByMinutes"
-        > & {
-          _id: mongoose.Types.ObjectId;
-          user: {
-            _id: mongoose.Types.ObjectId;
-            name?: string;
-            email?: string;
-            role?: string;
-            manager?: mongoose.Types.ObjectId;
-          };
-        }
-      >();
+      .lean();
 
     if (!attendance) {
       return errorResponse("Attendance record not found", { status: 404 });
@@ -202,7 +180,7 @@ export async function DELETE(
     ) {
       const targetUser = await UserModel.findById(attendance.user)
         .select("manager")
-        .lean<Pick<UserDocument, "manager">>();
+        .lean();
       if (targetUser?.manager?.toString() !== sessionUser.id) {
         return errorResponse("Forbidden", { status: 403 });
       }

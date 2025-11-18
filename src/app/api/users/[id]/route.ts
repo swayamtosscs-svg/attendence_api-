@@ -7,7 +7,6 @@ import { errorResponse, jsonResponse } from "@/lib/http";
 import { getSessionUser } from "@/lib/current-user";
 import { assertRole } from "@/lib/permissions";
 import { updateUserSchema } from "@/lib/validators";
-import type { UserDocument } from "@/models/User";
 
 function canManageUser(sessionUserRole: string, targetRole: string): boolean {
   if (sessionUserRole === "admin") {
@@ -45,19 +44,7 @@ export async function GET(
 
     const user = await UserModel.findById(id)
       .select("-passwordHash")
-      .lean<
-        Pick<
-          UserDocument,
-          | "_id"
-          | "name"
-          | "email"
-          | "role"
-          | "department"
-          | "designation"
-          | "status"
-          | "manager"
-        >
-      >();
+      .lean();
 
     if (!user) {
       return errorResponse("User not found", { status: 404 });
@@ -137,7 +124,8 @@ export async function PATCH(
         department: user.department,
         designation: user.designation,
         status: user.status,
-        manager: user.manager
+        manager: user.manager,
+        profilePicture: user.profilePicture
       }
     });
   } catch (error) {

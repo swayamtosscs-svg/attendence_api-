@@ -8,7 +8,6 @@ import { assertRole } from "@/lib/permissions";
 import { handleApiError } from "@/lib/api-response";
 import { errorResponse, jsonResponse } from "@/lib/http";
 import { leaveDecisionSchema } from "@/lib/validators";
-import type { UserDocument } from "@/models/User";
 
 function ensureObjectId(id: string) {
   if (!mongoose.Types.ObjectId.isValid(id)) {
@@ -33,13 +32,7 @@ export async function GET(
     const leave = await LeaveRequestModel.findById(leaveId)
       .populate("user", "name email role manager")
       .populate("manager", "name email role")
-      .lean<{
-        _id: mongoose.Types.ObjectId;
-        user: {
-          _id: mongoose.Types.ObjectId;
-          manager?: mongoose.Types.ObjectId | string;
-        };
-      }>();
+      .lean();
 
     if (!leave) {
       return errorResponse("Leave request not found", { status: 404 });
@@ -90,7 +83,7 @@ export async function PATCH(
     ) {
       const targetUser = await UserModel.findById(leave.user)
         .select("manager")
-        .lean<Pick<UserDocument, "manager">>();
+        .lean();
       if (targetUser?.manager?.toString() !== sessionUser.id) {
         return errorResponse("Forbidden", { status: 403 });
       }

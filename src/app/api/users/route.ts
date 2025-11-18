@@ -35,6 +35,7 @@ export async function GET() {
         designation: user.designation,
         status: user.status,
         manager: user.manager,
+        profilePicture: user.profilePicture,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
       }))

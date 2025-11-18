@@ -8,7 +8,7 @@ declare global {
   } | undefined;
 }
 
-const MONGODB_URI = process.env.MONGODB_URI as string;
+const MONGODB_URI = process.env.MONGODB_URI;
 
 if (!MONGODB_URI) {
   throw new Error("Missing environment variable MONGODB_URI");

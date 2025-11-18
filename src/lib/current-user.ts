@@ -30,7 +30,15 @@ export async function getSessionUser(
     return null;
   }
 
-  const payload = verifyAuthToken(token);
+  let payload;
+  try {
+    payload = verifyAuthToken(token);
+  } catch (error) {
+    if (requireAuth) {
+      throw new Error("Unauthorized");
+    }
+    return null;
+  }
   await connectDB();
   const userDoc = await UserModel.findById(payload.userId).lean<UserDocument>();
   if (!userDoc) {

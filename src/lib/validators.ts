@@ -71,3 +71,14 @@ export const leaveDecisionSchema = z.object({
   reply: z.string().min(3).max(500).optional()
 });
 
+export const sendMessageSchema = z.object({
+  recipientId: z.string().min(1),
+  content: z.string().min(1).max(5000)
+});
+
+export const getMessagesQuerySchema = z.object({
+  userId: z.string().optional(),
+  limit: z.string().optional().transform((val) => (val ? parseInt(val, 10) : 50)),
+  before: z.string().datetime().optional()
+});
+

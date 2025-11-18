@@ -30,14 +30,13 @@ export async function GET(request: NextRequest) {
     const match: Record<string, unknown> = {};
 
     if (startDate || endDate) {
-      const dateFilter: { $gte?: Date; $lte?: Date } = {};
+      match.date = {};
       if (startDate) {
-        dateFilter.$gte = startDate;
+        match.date = { ...match.date, $gte: startDate };
       }
       if (endDate) {
-        dateFilter.$lte = endDate;
+        match.date = { ...match.date, $lte: endDate };
       }
-      match.date = dateFilter;
     }
 
     if (userIdParam) {
@@ -50,7 +49,7 @@ export async function GET(request: NextRequest) {
     } else if (sessionUser.role === "manager") {
       const managedUsers = await UserModel.find({ manager: sessionUser.id })
         .select("_id")
-        .lean<Array<{ _id: mongoose.Types.ObjectId }>>();
+        .lean();
       match.user = {
         $in: [
           new mongoose.Types.ObjectId(sessionUser.id),

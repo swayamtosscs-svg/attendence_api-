@@ -2,7 +2,7 @@ import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
 import { cookies } from "next/headers";
 
-const AUTH_SECRET = process.env.AUTH_SECRET as string;
+const AUTH_SECRET = process.env.AUTH_SECRET;
 
 if (!AUTH_SECRET) {
   throw new Error("Missing environment variable AUTH_SECRET");

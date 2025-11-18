@@ -6,8 +6,6 @@ import { getSessionUser } from "@/lib/current-user";
 import { handleApiError } from "@/lib/api-response";
 import { errorResponse, jsonResponse } from "@/lib/http";
 import { leaveRequestSchema } from "@/lib/validators";
-import mongoose from "mongoose";
-import type { UserDocument } from "@/models/User";
 
 export async function GET() {
   try {
@@ -24,7 +22,7 @@ export async function GET() {
     } else if (sessionUser.role === "manager") {
       const managedUsers = await UserModel.find({ manager: sessionUser.id })
         .select("_id")
-        .lean<Array<{ _id: mongoose.Types.ObjectId }>>();
+        .lean();
       filter.user = {
         $in: [sessionUser.id, ...managedUsers.map((user) => user._id.toString())]
       };
@@ -69,11 +67,8 @@ export async function POST(request: NextRequest) {
     await connectDB();
 
     const manager =
-      (
-        await UserModel.findOne({ _id: sessionUser.id })
-          .select("manager")
-          .lean<Pick<UserDocument, "manager">>()
-      )?.manager ?? undefined;
+      (await UserModel.findOne({ _id: sessionUser.id }).select("manager").lean())
+        ?.manager ?? undefined;
 
     const leaveRequest = await LeaveRequestModel.create({
       user: sessionUser.id,
