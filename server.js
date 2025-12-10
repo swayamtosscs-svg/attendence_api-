@@ -1,3 +1,8 @@
+// Load environment variables first (before requiring socket-server)
+// Try .env.local first, then fallback to .env
+require('dotenv').config({ path: '.env.local' });
+require('dotenv').config(); // This will load .env if .env.local doesn't exist
+
 const { createServer } = require("http");
 const { parse } = require("url");
 const next = require("next");
