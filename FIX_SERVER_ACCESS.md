@@ -17,11 +17,13 @@ chmod +x check-server.sh
 # Check firewall status
 sudo ufw status
 
-# Allow port 8087
+# Allow port 8092 (default) or 8087
+sudo ufw allow 8092/tcp
+# Or if using 8087:
 sudo ufw allow 8087/tcp
 
 # Verify
-sudo ufw status | grep 8087
+sudo ufw status | grep 8092
 ```
 
 ### Step 3: Verify Server is Bound to 0.0.0.0
@@ -55,10 +57,10 @@ pm2 logs attendance-api
 ### Step 5: Test Server
 ```bash
 # Test locally
-curl http://localhost:8087
+curl http://localhost:8092
 
 # Test from another machine or use online tool
-curl http://103.14.120.163:8087
+curl http://103.14.120.163:8092
 ```
 
 ## Common Issues and Solutions
@@ -66,6 +68,8 @@ curl http://103.14.120.163:8087
 ### Issue 1: Firewall Blocking Port
 **Solution:**
 ```bash
+sudo ufw allow 8092/tcp
+# Or if using 8087:
 sudo ufw allow 8087/tcp
 sudo ufw reload
 ```
@@ -112,7 +116,8 @@ nano .env.local
 # Make sure MONGODB_URI uses localhost if MongoDB is on same server
 
 # 6. Open firewall
-sudo ufw allow 8087/tcp
+sudo ufw allow 8092/tcp
+# Or if you want to use 8087, set PORT=8087 in .env.local
 
 # 7. Start with PM2
 pm2 stop attendance-api 2>/dev/null || true
@@ -141,15 +146,15 @@ pm2 logs attendance-api --lines 50
 # Should show: "✅ Next.js server ready at http://0.0.0.0:8087"
 
 # 3. Check port
-sudo netstat -tulpn | grep 8087
-# Should show: 0.0.0.0:8087
+sudo netstat -tulpn | grep 8092
+# Should show: 0.0.0.0:8092
 
 # 4. Check firewall
-sudo ufw status | grep 8087
-# Should show: 8087/tcp ALLOW
+sudo ufw status | grep 8092
+# Should show: 8092/tcp ALLOW
 
 # 5. Test API
-curl -X POST http://localhost:8087/api/auth/login \
+curl -X POST http://localhost:8092/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"test@test.com","password":"test123"}'
 ```
@@ -157,17 +162,17 @@ curl -X POST http://localhost:8087/api/auth/login \
 ## If Still Not Working
 
 1. **Check cloud provider firewall** (AWS, DigitalOcean, etc.)
-2. **Check if port 8087 is already in use:**
+2. **Check if port 8092 is already in use:**
    ```bash
-   sudo lsof -i :8087
+   sudo lsof -i :8092
    ```
 3. **Check server logs for errors:**
    ```bash
    pm2 logs attendance-api
    ```
-4. **Try a different port** (e.g., 3000) to test:
+4. **Try a different port** (e.g., 8087) to test:
    ```bash
-   PORT=3000 pm2 restart attendance-api
-   sudo ufw allow 3000/tcp
+   PORT=8087 pm2 restart attendance-api
+   sudo ufw allow 8087/tcp
    ```
 

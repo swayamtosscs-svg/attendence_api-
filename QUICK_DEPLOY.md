@@ -85,8 +85,8 @@ pm2 startup
 # Check firewall status
 sudo ufw status
 
-# Allow port 8087
-sudo ufw allow 8087/tcp
+# Allow port 8092 (default production port)
+sudo ufw allow 8092/tcp
 
 # Verify
 sudo ufw status
@@ -101,10 +101,11 @@ pm2 status
 pm2 logs attendance-api
 
 # Test locally
-curl http://localhost:8087
+curl http://localhost:8092
 
 # Test from external (should work now)
-curl http://103.14.120.163:8087
+curl http://103.14.120.163:8092
+# Note: Default port is 8092, can be changed via PORT env variable
 ```
 
 ## Fix MongoDB Connection Issue
@@ -179,7 +180,7 @@ pm2 status
 After deployment, test the API:
 ```bash
 # Test login endpoint
-curl -X POST http://103.14.120.163:8087/api/auth/login \
+curl -X POST http://103.14.120.163:8092/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{
     "email": "swayam@gmail.com",

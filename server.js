@@ -10,7 +10,8 @@ const { initializeSocket } = require("./src/lib/socket-server");
 
 const dev = process.env.NODE_ENV !== "production";
 const hostname = process.env.HOST || "0.0.0.0";
-const port = parseInt(process.env.PORT || "8087", 10);
+// Default port: 8092 for production, can be overridden via PORT env variable
+const port = parseInt(process.env.PORT || "8092", 10);
 const externalIP = "103.14.120.163";
 
 const app = next({ dev, hostname, port });

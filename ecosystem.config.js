@@ -6,7 +6,7 @@ module.exports = {
     exec_mode: 'fork',
     env: {
       NODE_ENV: 'production',
-      PORT: 8087,
+      PORT: 8092,
       HOST: '0.0.0.0'
     },
     error_file: './logs/pm2-error.log',

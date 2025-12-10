@@ -48,15 +48,16 @@ pm2 status
 pm2 logs attendance-api
 
 # Test the server
-curl http://localhost:8087
-# Or from external: http://103.14.120.163:8087
+curl http://localhost:8092
+# Or from external: http://103.14.120.163:8092
+# Note: Default port is 8092, can be changed via PORT environment variable
 ```
 
 ## Alternative: Direct Node.js Start
 ```bash
 # Set environment variables
 export NODE_ENV=production
-export PORT=8087
+export PORT=8092
 export HOST=0.0.0.0
 
 # Start server
@@ -64,16 +65,19 @@ npm start
 ```
 
 ## Firewall Configuration (Ubuntu)
-Make sure port 8087 is open:
+Make sure port 8092 is open (or 8087 if using that):
 ```bash
 # Check if ufw is active
 sudo ufw status
 
-# Allow port 8087
+# Allow port 8092 (default production port)
+sudo ufw allow 8092/tcp
+
+# Or if using port 8087
 sudo ufw allow 8087/tcp
 
 # Or if using iptables
-sudo iptables -A INPUT -p tcp --dport 8087 -j ACCEPT
+sudo iptables -A INPUT -p tcp --dport 8092 -j ACCEPT
 ```
 
 ## PM2 Management Commands
@@ -98,13 +102,17 @@ pm2 delete attendance-api
 
 ### Port Already in Use
 ```bash
-# Find process using port 8087
-sudo lsof -i :8087
+# Find process using port 8092 (or 8087)
+sudo lsof -i :8092
 # or
-sudo netstat -tulpn | grep 8087
+sudo netstat -tulpn | grep 8092
 
 # Kill the process if needed
 sudo kill -9 <PID>
+
+# Or use a different port by setting PORT environment variable
+export PORT=8087
+pm2 restart attendance-api
 ```
 
 ### Server Not Accessible Externally
@@ -123,7 +131,7 @@ pm2 logs attendance-api --lines 100
 
 ## Environment Variables
 The server uses these environment variables:
-- `PORT`: Server port (default: 8087)
+- `PORT`: Server port (default: 8092 for production, 3000 for local dev)
 - `HOST`: Hostname to bind (default: 0.0.0.0)
 - `NODE_ENV`: Environment mode (production/development)
 - `MONGODB_URI`: MongoDB connection string
